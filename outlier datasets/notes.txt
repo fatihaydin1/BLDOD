@@ -1,0 +1,13 @@
+datasets web address: http://odds.cs.stonybrook.edu/
+
+
+Synthetic veri için link: https://doi.org/10.5281/zenodo.1171077
+
+This synthetically generated dataset can be used to evaluate outlier detection algorithms. It has 10 attributes and 1000 observations, of which 100 are labeled as outliers. Two-dimensional combinations of attributes form differently shaped clusters.
+
+
+Attribute 0 & Attribute 1: Two circular clusters
+Attribute 2 & Attribute 3: Two banana shaped clusters
+Attribute 4 & Attribute 5: Three point clouds
+Attribute 6 & Attribute 7: Two point clouds with variances
+Attribute 8 & Attribute 9: Three anisotropic shaped clusters. 
