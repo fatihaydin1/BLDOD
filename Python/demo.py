@@ -1,4 +1,5 @@
 # DEMO for BLDOD
+# The demo application has been run on Google Colab. Hence, you should upload the data sets to the directory named "contents"
 
 import scipy.io
 from sklearn.metrics import roc_auc_score
