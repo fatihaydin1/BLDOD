@@ -1,15 +1,22 @@
 # DEMO for BLDOD
-# The demo application has been run on Google Colab. Hence, you should upload the data sets to the directory named "contents"
+# Run from the Python folder: python demo.py
 
+import numpy as np
 import scipy.io
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import average_precision_score, f1_score, roc_auc_score
 
-# Load MATLAB mat files
-mat = scipy.io.loadmat('arrhythmia.mat');
+from BLDOD import BLDOD
 
-# Obtain local factors
-score = BLDOD(mat['X'], 1);
+# Load a data set from the "outlier datasets" folder (variables X and y)
+mat = scipy.io.loadmat('../outlier datasets/arrhythmia.mat')
+X, y = mat['X'], np.ravel(mat['y'])
 
-# Calculate the ROC curve (receiver operating characteristic curve)
-rocarea = roc_auc_score(mat['y'], score);
-print(rocarea);
+# Obtain the outlier factors
+score = BLDOD(X, 1)
+
+# Area under the ROC curve and average precision (area under the precision-recall curve)
+print('ROC AUC:', roc_auc_score(y, score))
+print('Average precision:', average_precision_score(y, score))
+
+# F-measure when points whose factor is above 0.9 are labelled outliers
+print('F-measure:', f1_score(y, score > 0.9))
