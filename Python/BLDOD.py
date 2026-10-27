@@ -1,28 +1,40 @@
+"""Boundary-aware Local Density-based Outlier Detection (BLDOD): a NumPy port of BLDOD.m.
+
+F. Aydin, "Boundary-aware local density-based outlier detection,"
+Information Sciences, 647, 119520, 2023.
+https://doi.org/10.1016/j.ins.2023.119520
+
+For a scikit-learn compatible version, see
+https://github.com/fatihaydin1/scikit-reduce
+"""
+
 import numpy as np
-from numpy import linalg as LA
 
-# Boundary-aware Local density-based Outlier Detection (BLDOD)
-def BLDOD(X, lambda_p):
-  # Compute the number of points
-  m = X.shape[0];
 
-  # Find the standard deviation of each column of the data set (X)
-  stdDev = X.std(1);
+def BLDOD(X, lambda_p=1.0):
+    """Return the outlier factor of each point, in [0, 1] (higher = more abnormal)."""
+    X = np.asarray(X, dtype=float)
 
-  N = np.zeros(m);
+    # Compute the number of points
+    m = X.shape[0]
 
-  # Multiply the norm of the standard deviation of the points with lambda_p
-  deviation = lambda_p * LA.norm(stdDev, 2);
+    # Sample standard deviation of each column, ignoring NaN (MATLAB: std(X, 'omitnan'))
+    stdDev = np.nanstd(X, axis=0, ddof=1)
 
-  for i in range(m):
-    # Move the considered point to the center (0, 0)
-    D = X - X[i, :];
+    N = np.zeros(m)
 
-    # Calculate the number of points that are as far away as the deviation length value from the considered point
-    Dsq = D*D;
-    Dsq_len = np.sqrt(Dsq).sum(axis=1);
-    N[i] = (Dsq_len <= deviation).sum();
+    # Multiply the norm of the standard deviation of the points with lambda_p
+    deviation = lambda_p * np.linalg.norm(stdDev)
 
-  # Normalize the values between 0-1
-  N = (N - np.min(N))/(np.max(N)-np.min(N));
-  return 1 - N;
+    for i in range(m):
+        # Move the considered point to the center (0, 0)
+        D = X - X[i, :]
+        # The number of points whose Euclidean distance to the considered point
+        # is at most the deviation length
+        N[i] = np.sum(np.sqrt(np.sum(D**2, axis=1)) <= deviation)
+
+    # Normalize the values between 0-1 (MATLAB: 1 - normalize(N, 'range'))
+    spread = N.max() - N.min()
+    if spread == 0:
+        return np.ones(m)
+    return 1 - (N - N.min()) / spread
