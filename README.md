@@ -10,7 +10,7 @@ https://doi.org/10.1016/j.ins.2023.119520
 BLDOD is also available in [scikit-reduce](https://github.com/fatihaydin1/scikit-reduce), with the scikit-learn outlier detection interface (`fit`, `score_samples`, `decision_function`, `predict`):
 
 ```bash
-pip install git+https://github.com/fatihaydin1/scikit-reduce
+pip install scikit-reduce
 ```
 
 ```python
